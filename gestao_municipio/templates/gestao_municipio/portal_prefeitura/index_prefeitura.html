@@ -1,0 +1,12 @@
+{% extends 'global/base.html' %}
+
+{% block titulo %}
+    Secretaria de Habitação - Prefeitura Municipal de ...
+{% endblock %}
+
+{% block conteudo %}
+<a href="{% url 'gestao_municipio:cadastro_beneficiario' %}">Cadastro de Beneficiário</a>
+</br>
+<a href="{% url 'gestao_municipio:consulta_beneficiario' %}">Consulta de Beneficiário</a>
+{% endblock %}
+
