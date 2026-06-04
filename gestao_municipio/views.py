@@ -5,5 +5,5 @@ def index(request):
 
     return render(
         request, 
-        'beneficiario/index.html',
+        'gestao_municipio/index.html',
         )

@@ -19,6 +19,9 @@ from django.urls import path, include
 
 
 urlpatterns = [
-    path('', include('beneficiario.urls')),
+    # Link para simular o acesso ao portal da prefeitura, onde o usuário pode fazer o cadastro público
+    path('portal_prefeitura/', include('gestao_municipio.urls')),
+
+    
     path('admin/', admin.site.urls),
 ]
