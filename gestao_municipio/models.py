@@ -1,8 +1,10 @@
 from django.db import models
 from simple_history.models import HistoricalRecords
 from django.core.validators import RegexValidator
+from gestao_municipio.opcoes import CampoBeneficiario
 
 class Beneficiario(models.Model):
+
     # --- SEÇÃO DADOS PESSOAIS ---
     cpf = models.CharField(
         max_length=11, 
@@ -175,7 +177,15 @@ class Beneficiario(models.Model):
     filhos_7_11 = models.PositiveIntegerField(default=0)
     filhos_12_18 = models.PositiveIntegerField(default=0)
 
-    # cep = models.CharField(max_length=8)
+    # cep = models.CharField(
+    #     max_length=8,
+    #     validators=[
+    #         RegexValidator(
+    #             regex=r'^\d{7}$',
+    #             message='CEP deve conter 7 dígitos.'
+    #         )
+    #     ]
+    #     )
     # nome_rua = models.CharField(max_length=200)
     # numero = models.CharField(max_length=10, blank=True, null=True)
     # bairro = models.CharField(max_length=100)
@@ -199,5 +209,61 @@ class Beneficiario(models.Model):
     ativo = models.BooleanField(default=True)
     history = HistoricalRecords()
 
+    pontuacao = models.PositiveIntegerField(
+        default=0,
+        editable=False
+    )
+
     def __str__(self):
         return f"{self.nome_completo} - CPF: {self.cpf} - NIS: {self.nis}"
+
+    class Meta:
+        ordering = ['nome_completo']
+        verbose_name = 'Beneficiário'
+        verbose_name_plural = 'Beneficiários'
+
+class CriterioPontuacao(models.Model):
+
+    descricao = models.CharField(
+        max_length=255)
+
+    campo_beneficiario = models.CharField(
+        max_length=100,
+        choices= CampoBeneficiario.choices,
+        unique=True
+    )
+
+    pontos = models.PositiveIntegerField(
+        help_text='Quantidade de pontos atribuída ao critério')
+
+
+    TIPO_CALCULO_CHOICES = [
+        ('fixo', 'Fixo'),
+        ('multiplicador', 'Multiplicador'),
+    ]
+    tipo_calculo = models.CharField(
+        max_length=20,
+        choices=TIPO_CALCULO_CHOICES,
+        default='fixo')
+
+    fundamentacao_legal = models.CharField(
+        max_length=255,
+        blank=True)
+
+    ativo = models.BooleanField(
+        default=True
+    )
+
+    data_cadastro = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    history = HistoricalRecords()
+
+    class Meta:
+        ordering = ['descricao']
+        verbose_name = 'Critério de Pontuação'
+        verbose_name_plural = 'Critérios de Pontuação'
+
+    def __str__(self):
+        return f'{self.descricao} ({self.pontos} pts)'
