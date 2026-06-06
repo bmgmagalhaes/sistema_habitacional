@@ -1,12 +1,29 @@
 from django.db import models
-from django.utils import timezone
+from simple_history.models import HistoricalRecords
+from django.core.validators import RegexValidator
 
 class Beneficiario(models.Model):
     # --- SEÇÃO DADOS PESSOAIS ---
-    cpf = models.CharField(max_length=11, unique=True)
+    cpf = models.CharField(
+        max_length=11, 
+        unique=True, 
+        validators=[
+            RegexValidator(
+                regex=r'^\d{11}$',
+                message='CPF deve conter 11 dígitos.'
+            )
+        ])
     nome_completo = models.CharField(max_length=200)
     # nome_social = models.CharField(max_length=200, blank=True, null=True)
-    nis = models.CharField(max_length=11, unique=True)
+    nis = models.CharField(
+        max_length=11, 
+        unique=True, 
+        validators=[
+            RegexValidator(
+                regex=r'^\d{11}$',
+                message='NIS deve conter 11 dígitos.'
+            )
+        ])
 
     # TIPO_DOC_CHOICES = [
     #     ('rg', 'RG'),
@@ -60,26 +77,28 @@ class Beneficiario(models.Model):
     # naturalidade = models.CharField(max_length=100)
 
     ESTADO_CIVIL_CHOICES = [
-        ('solteiro', 'Solteiro(a)'),
         ('casado', 'Casado(a)'),
+        ('separado', 'Separado(a)'),
         ('divorciado', 'Divorciado(a)'),
+        ('uniao_estavel', 'Em união estável'),
+        ('companheiro', 'Mora com companheiro(a)'),
+        ('solteiro', 'Solteiro(a)'),
         ('viuvo', 'Viúvo(a)'),
-        ('uniao_estavel', 'União Estável'),
     ]
     estado_civil = models.CharField(max_length=20, choices=ESTADO_CIVIL_CHOICES)
 
-    GRAU_INSTRUCAO_CHOICES = [
-        ('fundamental', 'Ensino Fundamental'),
-        ('medio', 'Ensino Médio'),
-        ('superior', 'Ensino Superior'),
-        ('pos', 'Pós-graduação'),
-    ]
-    grau_instrucao = models.CharField(max_length=20, choices=GRAU_INSTRUCAO_CHOICES)
+    # GRAU_INSTRUCAO_CHOICES = [
+    #     ('fundamental', 'Ensino Fundamental'),
+    #     ('medio', 'Ensino Médio'),
+    #     ('superior', 'Ensino Superior'),
+    #     ('pos', 'Pós-graduação'),
+    # ]
+    # grau_instrucao = models.CharField(max_length=20, choices=GRAU_INSTRUCAO_CHOICES)
 
     SEXO_CHOICES = [
         ('masculino', 'Masculino'),
         ('feminino', 'Feminino'),
-        ('outro', 'Outro'),
+        # ('outro', 'Outro'),
     ]
     sexo = models.CharField(max_length=10, choices=SEXO_CHOICES)
 
@@ -91,19 +110,19 @@ class Beneficiario(models.Model):
     # ]
     # genero = models.CharField(max_length=20, choices=GENERO_CHOICES, blank=True, null=True)
 
-    telefone1 = models.CharField(max_length=15)
+    # telefone1 = models.CharField(max_length=15)
     # telefone2 = models.CharField(max_length=15, blank=True, null=True)
     # email = models.EmailField(blank=True, null=True)
-    profissao = models.CharField(max_length=100)
-    nome_mae = models.CharField(max_length=200)
-    nome_pai = models.CharField(max_length=200, blank=True, null=True)
+    # profissao = models.CharField(max_length=100)
+    # nome_mae = models.CharField(max_length=200)
+    # nome_pai = models.CharField(max_length=200, blank=True, null=True)
 
     possui_deficiencia = models.BooleanField(default=False)
     possui_doenca_rara = models.BooleanField(default=False)
     mulher_responsavel_familia = models.BooleanField(default=False)
 
     # --- SEÇÃO RENDA ---
-    renda_pessoal = models.DecimalField(max_digits=10, decimal_places=2)
+    renda_pessoal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     POSICAO_FAMILIAR_CHOICES = [
         ('chefe', 'Chefe de família'),
         ('conjuge', 'Cônjuge'),
@@ -112,7 +131,6 @@ class Beneficiario(models.Model):
     ]
     
     posicao_familiar = models.CharField(max_length=20, choices=POSICAO_FAMILIAR_CHOICES)
-    renda_comprovada = models.BooleanField(default=False)
     # fonte_pagadora = models.CharField(max_length=20, blank=True, null=True)
     # data_admissao = models.DateField(blank=True, null=True)
 
@@ -139,7 +157,7 @@ class Beneficiario(models.Model):
     # valor_renda_liquida_declarada = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     # --- SEÇÃO DADOS FAMILIARES ---
-    numero_pessoas_familia = models.IntegerField()
+    numero_pessoas_familia = models.PositiveIntegerField(default=1)
     renda_familiar = models.DecimalField(max_digits=10, decimal_places=2)
 
     recebe_bolsa_familia = models.BooleanField(default=False)
@@ -150,12 +168,12 @@ class Beneficiario(models.Model):
     mulheres_violencia_domestica = models.BooleanField(default=False)
     povos_tradicionais_quilombolas = models.BooleanField(default=False)
     idosos_na_familia = models.BooleanField(default=False)
-    contrato_rescindido = models.BooleanField(default=False)
+    beneficiario_contrato_rescindido = models.BooleanField(default=False)
     microcefalia_na_familia = models.BooleanField(default=False)
 
-    filhos_0_6 = models.IntegerField(default=0)
-    filhos_7_11 = models.IntegerField(default=0)
-    filhos_12_18 = models.IntegerField(default=0)
+    filhos_0_6 = models.PositiveIntegerField(default=0)
+    filhos_7_11 = models.PositiveIntegerField(default=0)
+    filhos_12_18 = models.PositiveIntegerField(default=0)
 
     # cep = models.CharField(max_length=8)
     # nome_rua = models.CharField(max_length=200)
@@ -169,10 +187,17 @@ class Beneficiario(models.Model):
     situacao_rua = models.BooleanField(default=False)
 
     # Campo para controle de registro
-    
-    data_cadastro = models.DateTimeField(default=timezone.now)
-    data_alteracao = models.DateTimeField(blank=True, null=True)
+
+    SITUACAO_CADASTRAL_CHOICES = [
+        ('em_analise', 'Em análise'),
+        ('contemplado', 'Contemplado'),
+        ('indeferido', 'Indeferido'),
+    ]
+    situacao_cadastral = models.CharField(max_length=20, choices=SITUACAO_CADASTRAL_CHOICES, default='em_analise')
+    data_cadastro = models.DateTimeField(auto_now_add=True)
+    data_ultima_alteracao = models.DateTimeField(auto_now=True)
     ativo = models.BooleanField(default=True)
+    history = HistoricalRecords()
 
     def __str__(self):
-        return f"{self.nome_completo} ({self.cpf})"
+        return f"{self.nome_completo} - CPF: {self.cpf} - NIS: {self.nis}"
