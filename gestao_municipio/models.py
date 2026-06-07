@@ -218,25 +218,20 @@ class Beneficiario(models.Model):
     def __str__(self):
         return f"{self.nome_completo} - CPF: {self.cpf} - NIS: {self.nis}"
 
-    
-    def calcular_pontuacao(self):
+    def recalcular_pontuacao(self):
+        """
+        Recalcula a pontuação do beneficiário com base nos critérios de pontuação ativos.
+        Usado para o caso de alterações cadastrais ou mudanças nos critérios de pontuação, garantindo que a pontuação do beneficiário esteja sempre atualizada e refletindo corretamente os critérios definidos.
+        """
         
-        
-        self.pontuacao = 
-        total_pontos = 0
+        nova_pontuacao = PontuacaoServico.calcular_pontuacao(self)
 
-        
-        for criterio in criterios:
-            valor_campo = getattr(self, criterio.campo_beneficiario)
-            if valor_campo:
-                if criterio.tipo_calculo == 'fixo':
-                    total_pontos += criterio.pontos
-                elif criterio.tipo_calculo == 'multiplicador' and isinstance(valor_campo, int):
-                    total_pontos += criterio.pontos * valor_campo
-        self.pontuacao = total_pontos
-        self.save()
+        if nova_pontuacao != self.pontuacao:
+            
+            self.pontuacao = nova_pontuacao
+            self.save(update_fields=['pontuacao'])
 
-    
+
     class Meta:
         ordering = ['nome_completo']
         verbose_name = 'Beneficiário'
@@ -283,17 +278,6 @@ class CriterioPontuacao(models.Model):
 
     history = HistoricalRecords()
 
-    def recalcular_pontuacao(self):
-        """
-        Recalcula a pontuação do beneficiário com base nos critérios de pontuação ativos.
-        Usado para o caso de alterações cadastrais ou mudanças nos critérios de pontuação, garantindo que a pontuação do beneficiário esteja sempre atualizada e refletindo corretamente os critérios definidos.
-        """
-        
-        nova_pontuacao = PontuacaoServico.calcular_pontuacao(self)
-
-        if nova_pontuacao != self.pontuacao:
-            self.pontuacao = nova_pontuacao
-            self.save(update_fields=['pontuacao'])
 
     class Meta:
         ordering = ['descricao']
