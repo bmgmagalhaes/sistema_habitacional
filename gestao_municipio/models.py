@@ -15,7 +15,8 @@ class Beneficiario(models.Model):
                 regex=r'^\d{11}$',
                 message='CPF deve conter 11 dígitos.'
             )
-        ])
+        ],
+        verbose_name='CPF')
     nome_completo = models.CharField(max_length=200)
     # nome_social = models.CharField(max_length=200, blank=True, null=True)
     nis = models.CharField(
@@ -26,7 +27,8 @@ class Beneficiario(models.Model):
                 regex=r'^\d{11}$',
                 message='NIS deve conter 11 dígitos.'
             )
-        ])
+        ],
+        verbose_name='NIS')
 
     # TIPO_DOC_CHOICES = [
     #     ('rg', 'RG'),
@@ -71,7 +73,9 @@ class Beneficiario(models.Model):
 
     # uf_emissao = models.CharField(max_length=2, choices=UF_CHOICES, blank=True, null=True)
 
-    data_nascimento = models.DateField()
+    data_nascimento = models.DateField(
+        verbose_name='Data de Nascimento'
+    )
     # NACIONALIDADE_CHOICES = [
     #     ('brasileira', 'Brasileira'),
     #     ('estrangeira', 'Estrangeira'),
@@ -88,7 +92,10 @@ class Beneficiario(models.Model):
         ('solteiro', 'Solteiro(a)'),
         ('viuvo', 'Viúvo(a)'),
     ]
-    estado_civil = models.CharField(max_length=20, choices=ESTADO_CIVIL_CHOICES)
+    estado_civil = models.CharField(
+        max_length=20, 
+        choices=ESTADO_CIVIL_CHOICES,
+        verbose_name='Estado Civil')
 
     # GRAU_INSTRUCAO_CHOICES = [
     #     ('fundamental', 'Ensino Fundamental'),
@@ -120,9 +127,9 @@ class Beneficiario(models.Model):
     # nome_mae = models.CharField(max_length=200)
     # nome_pai = models.CharField(max_length=200, blank=True, null=True)
 
-    possui_deficiencia = models.BooleanField(default=False)
-    possui_doenca_rara = models.BooleanField(default=False)
-    mulher_responsavel_familia = models.BooleanField(default=False)
+    possui_deficiencia = models.BooleanField(default=False, verbose_name='Possui deficiência?')
+    possui_doenca_rara = models.BooleanField(default=False, verbose_name='Possui doença rara?')
+    mulher_responsavel_familia = models.BooleanField(default=False, verbose_name='Mulher responsável pela família?')
 
     # --- SEÇÃO RENDA ---
     renda_pessoal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -133,7 +140,10 @@ class Beneficiario(models.Model):
         ('outro', 'Outro'),
     ]
     
-    posicao_familiar = models.CharField(max_length=20, choices=POSICAO_FAMILIAR_CHOICES)
+    posicao_familiar = models.CharField(
+        max_length=20, 
+        choices=POSICAO_FAMILIAR_CHOICES,
+        verbose_name='Posição familiar')
     # fonte_pagadora = models.CharField(max_length=20, blank=True, null=True)
     # data_admissao = models.DateField(blank=True, null=True)
 
@@ -160,23 +170,25 @@ class Beneficiario(models.Model):
     # valor_renda_liquida_declarada = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     # --- SEÇÃO DADOS FAMILIARES ---
-    numero_pessoas_familia = models.PositiveIntegerField(default=1)
+    numero_pessoas_familia = models.PositiveIntegerField(
+        default=1,
+        verbose_name='Número de pessoas na família')
     renda_familiar = models.DecimalField(max_digits=10, decimal_places=2)
 
-    recebe_bolsa_familia = models.BooleanField(default=False)
-    deficiencia_na_familia = models.BooleanField(default=False)
-    doenca_rara_na_familia = models.BooleanField(default=False)
-    recebe_bpc = models.BooleanField(default=False)
-    pessoa_negra_na_familia = models.BooleanField(default=False)
-    mulheres_violencia_domestica = models.BooleanField(default=False)
-    povos_tradicionais_quilombolas = models.BooleanField(default=False)
-    idosos_na_familia = models.BooleanField(default=False)
-    beneficiario_contrato_rescindido = models.BooleanField(default=False)
-    microcefalia_na_familia = models.BooleanField(default=False)
+    recebe_bolsa_familia = models.BooleanField(default=False, verbose_name='Recebe Bolsa Família?')
+    deficiencia_na_familia = models.BooleanField(default=False, verbose_name='Há pessoa com deficiência na família?')
+    doenca_rara_na_familia = models.BooleanField(default=False, verbose_name='Há pessoa com câncer ou doença rara crônica e degenerativa na família?')
+    recebe_bpc = models.BooleanField(default=False, verbose_name='Recebe BPC?')
+    pessoa_negra_na_familia = models.BooleanField(default=False, verbose_name='Há pessoa negra na família?')
+    mulheres_violencia_domestica = models.BooleanField(default=False, verbose_name='Mulheres vítima de violência doméstica ou familiar?')
+    povos_tradicionais_quilombolas = models.BooleanField(default=False, verbose_name='Há integrantes de povos tradicionais ou quilombolas na família?')
+    idosos_na_familia = models.BooleanField(default=False, verbose_name='Há idosos na família?')
+    beneficiario_contrato_rescindido = models.BooleanField(default=False, verbose_name='Beneficiário cujo contrato foi distrtado ou rescindido involuntariamente?')
+    microcefalia_na_familia = models.BooleanField(default=False, verbose_name='Há pessoa com microcefalia na família?')
 
-    filhos_0_6 = models.PositiveIntegerField(default=0)
-    filhos_7_11 = models.PositiveIntegerField(default=0)
-    filhos_12_18 = models.PositiveIntegerField(default=0)
+    filhos_0_6 = models.PositiveIntegerField(default=0, verbose_name='Filhos(a) de 0 a 6 anos')
+    filhos_7_11 = models.PositiveIntegerField(default=0, verbose_name='Filhos(a) de 7 a 11 anos')
+    filhos_12_18 = models.PositiveIntegerField(default=0, verbose_name='Filhos(a) de 12 a 18 anos')
 
     # cep = models.CharField(
     #     max_length=8,
@@ -194,8 +206,8 @@ class Beneficiario(models.Model):
     # estado = models.CharField(max_length=2, choices=UF_CHOICES, blank=True, null=True)
     # complemento = models.CharField(max_length=200, blank=True, null=True)
 
-    residente_area_risco = models.BooleanField(default=False)
-    situacao_rua = models.BooleanField(default=False)
+    residente_area_risco = models.BooleanField(default=False, verbose_name='Residente em área de risco?')
+    situacao_rua = models.BooleanField(default=False, verbose_name='Pessoa em situação de rua?')
 
     # Campo para controle de registro
 
