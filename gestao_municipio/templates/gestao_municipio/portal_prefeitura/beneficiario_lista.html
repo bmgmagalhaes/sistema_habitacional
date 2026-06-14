@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Beneficiários
+{% endblock %}
+
+{% block content %}
+
+<h2>Beneficiários</h2>
+
+<table class="table">
+
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Pontuação</th>
+            <th>Situação</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for beneficiario in beneficiarios %}
+
+        <tr>
+            <td>{{ beneficiario.nome_completo }}</td>
+            <td>{{ beneficiario.cpf }}</td>
+            <td>{{ beneficiario.pontuacao }}</td>
+            <td>{{ beneficiario.get_situacao_cadastral_display }}</td>
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}

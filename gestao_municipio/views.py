@@ -5,6 +5,7 @@ from gestao_municipio.models import Beneficiario
 from gestao_municipio.forms import BeneficiarioForm
 from gestao_municipio.servicos.pontuacao import PontuacaoServico
 from django.shortcuts import render
+from django.contrib import messages
 
 # Create your views here.
 
@@ -14,8 +15,8 @@ class BeneficiarioCreateView(CreateView):
     
     # Especifica o template a ser usado para renderizar o formulário de criação do beneficiário.
     template_name = 'gestao_municipio/portal_prefeitura/beneficiario_form.html'
-    # Especifica a URL para redirecionar após a criação bem-sucedida do beneficiário. Neste caso, redireciona para a lista de beneficiários.
-    success_url = reverse_lazy('gestao_municipio:beneficiario_lista')
+    # Especifica a URL para redirecionar após a criação bem-sucedida do beneficiário. Neste caso, redireciona para a index da prefeitura.
+    success_url = reverse_lazy('gestao_municipio:index_prefeitura')
 
     # Método sobrescrito form_valid é chamado pelo Django quando o formulário é válido. 
     def form_valid(self, form):
@@ -30,7 +31,17 @@ class BeneficiarioCreateView(CreateView):
         
         # Agora salva o beneficiário no banco de dados com a pontuação calculada
         beneficiario.save()  
+        self.object = beneficiario
 
+
+        messages.success(
+            self.request,
+            'Cadastro realizado com sucesso.'
+        )
+        messages.MessageFailure(
+            self.request,
+            'Erro ao realizar cadastro.'
+        )
         # Redireciona para a URL de sucesso após salvar o beneficiário
         return HttpResponseRedirect(self.get_success_url())  
 
@@ -80,5 +91,5 @@ def index_prefeitura(request):
 
     return render(
         request, 
-        'gestao_municipio/portal_prefeitura/index_prefeitura.html',
+        'gestao_municipio\portal_prefeitura\index_prefeitura.html',
         )

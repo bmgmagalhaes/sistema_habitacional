@@ -1,12 +1,181 @@
-{% extends 'global/base.html' %}
+{% extends 'base.html' %}
 
-{% block titulo %}
-    Secretaria de Habitação - Prefeitura Municipal de ...
+{% block title %}
+Portal do Beneficiário
 {% endblock %}
 
-{% block conteudo %}
-<a href="{% url 'gestao_municipio:cadastro_beneficiario' %}">Cadastro de Beneficiário</a>
-</br>
-<a href="{% url 'gestao_municipio:consulta_beneficiario' %}">Consulta de Beneficiário</a>
-{% endblock %}
+{% block content %}
 
+<div class="card mb-4">
+    
+</div>
+
+<div class="row justify-content-center">
+
+    <div class="col-md-8">
+
+        <div class="card shadow">
+
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">
+                    Portal do Beneficiário
+                </h3>
+            </div>
+
+            <div class="card-body">
+
+                <h4>
+                    
+                </h4>
+                
+
+
+                <div class="card-body">
+
+                    <h2>Cadastro Habitacional Municipal</h2>
+
+                    <p>
+                        Este é o sistema oficial de Cadastro Habitacional do município de
+                        <strong>NA TOWN/RN</strong>. A porta de entrada para a participação
+                        nos Programas Habitacionais de Interesse Social, como o
+                        <strong>Minha Casa, Minha Vida (MCMV)</strong>.
+                    </p>
+                    {% comment %} <p>
+                        O Cadastro é o primeiro e mais importante passo para que sua família
+                        possa ser selecionada em futuros projetos habitacionais promovidos
+                        pelo município em parceria com os governos estadual e federal.
+                    </p> {% endcomment %}
+
+                </div>
+
+                <p>
+                    Utilize as opções abaixo para realizar seu cadastro,
+                    consultar seus dados ou manter seu cadastro atualizado.
+                </p>
+
+                <div class="d-grid gap-3 mt-4">
+
+                    <a href="{% url 'gestao_municipio:beneficiario_novo' %}"
+                       class="btn btn-success btn-lg">
+
+                        Realizar Cadastro
+                    </a>
+
+                    <a href="#"
+                       class="btn btn-primary btn-lg">
+
+                        Consultar Cadastro
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="card-footer">
+
+                <strong>Atenção!!!</strong>
+
+                <ul class="mt-2 mb-0">
+                    <li>O cadastro é único por beneficiário.</li>
+                    <li>Mantenha seus dados sempre atualizados.</li>
+                    <li>A realização do cadastro não garante contemplação.</li>
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<h3 class="text-center mb-4">Informações Importantes</h3>
+
+<div class="accordion" id="accordionInformacoes">
+
+    <!-- Item 1 -->
+    <div class="accordion-item">
+
+        <h2 class="accordion-header">
+
+            <button class="accordion-button"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#participacao">
+
+                Como participar e manter-se elegível
+            </button>
+
+        </h2>
+
+        <div id="participacao"
+             class="accordion-collapse collapse show"
+             data-bs-parent="#accordionInformacoes">
+
+            <div class="accordion-body">
+
+                <p>
+                    Para garantir sua participação e elegibilidade nos programas habitacionais, o Ente Público Local (a Prefeitura) segue rigorosamente as diretrizes federais, conforme a Portaria MCID Nº 738/2024.
+                </p>
+
+                <p>
+                    Inscrição e Atualização no Cadastro Habitacional Local (Art. 6º e 7º, § 1º) </br>
+                    - É obrigatório estar inscrito(a) neste Cadastro Habitacional Local. </br>
+                    - Mantenha seus dados sempre atualizados! A atualização deve ser feita a cada 24 (vinte e quatro) meses ou sempre que houver qualquer alteração em suas informações (renda, composição familiar, endereço, etc.). </br>
+                    - O sistema de cadastramento é mantido periodicamente aberto para novas inscrições. </br>
+                </p>
+
+                <p>
+                    Cadastro Único (CadÚnico) (Art. 7º) </br>
+                    - Sua família precisa estar inscrita e com os dados atualizados no Cadastro Único de Programas Sociais do Governo Federal - CadÚnico. </br>
+                    - A Prefeitura Local fará a confirmação da sua situação no CadÚnico. Seus dados devem ser consistentes em ambos os cadastros. </br>
+                </p>
+                <p>
+                    Transparência e Gratuidade (Art. 7º, § 2º e Art. 8º) </br>
+                    - Reforçamos que a inscrição ou atualização cadastral para participação nos programas habitacionais é TOTALMENTE GRATUITA. É vedada a cobrança de qualquer valor. </br>
+                    - Todo o nosso sistema de cadastramento e seleção é passível de auditoria pelos órgãos de controle, garantindo a transparência e a correta aplicação dos critérios. </br>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Item 2 -->
+    <div class="accordion-item">
+
+        <h2 class="accordion-header">
+
+            <button class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#datas">
+
+                Datas importantes
+            </button>
+
+        </h2>
+
+        <div id="datas"
+             class="accordion-collapse collapse"
+             data-bs-parent="#accordionInformacoes">
+
+            <div class="accordion-body">
+                    <p>Período de Inscrição: De 06 de Fevereiro de 2026 a 09 de Março de 2026</p>
+                    <p>Divulgação das convocações no Diário Oficial:</p>
+                <ul>
+                    <li>1º Convocação: De 16 a 20 de Março de 2026</li>
+                    <li>2º Convocação: De 30 de Março a 06 de Abril de 2026</li>
+                    <li>3º Convocação: De 16 a 23 de Abril de 2026</li>
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

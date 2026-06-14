@@ -18,3 +18,20 @@ class BeneficiarioForm(forms.ModelForm):
             'data_cadastro',
             'data_ultima_alteracao',
         )
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        for nome, field in self.fields.items():
+
+            if isinstance(field, forms.BooleanField):
+
+                field.widget.attrs.update({
+                    'class': 'form-check-input'
+                })
+
+            else:
+
+                field.widget.attrs.update({
+                    'class': 'form-control'
+                })
