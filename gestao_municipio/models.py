@@ -2,7 +2,7 @@ from django.db import models
 from simple_history.models import HistoricalRecords
 from django.core.validators import RegexValidator
 from gestao_municipio.opcoes import CampoBeneficiario
-from gestao_municipio.servicos import PontuacaoServico
+
 
 class Beneficiario(models.Model):
 
@@ -218,13 +218,16 @@ class Beneficiario(models.Model):
     def __str__(self):
         return f"{self.nome_completo} - CPF: {self.cpf} - NIS: {self.nis}"
 
-    def recalcular_pontuacao(self):
+    def calcular_pontuacao(self):
         """
         Recalcula a pontuação do beneficiário com base nos critérios de pontuação ativos.
         Usado para o caso de alterações cadastrais ou mudanças nos critérios de pontuação, garantindo que a pontuação do beneficiário esteja sempre atualizada e refletindo corretamente os critérios definidos.
         """
-        
-        nova_pontuacao = PontuacaoServico.calcular_pontuacao(self)
+
+        # Importado aqui para evitar importação circular, já que o serviço de pontuação depende do modelo Beneficiário para acessar os campos necessários para o cálculo da pontuação.
+        from gestao_municipio.servicos.pontuacao import PontuacaoServico
+
+        nova_pontuacao = PontuacaoServico.calcular(self)
 
         if nova_pontuacao != self.pontuacao:
             
@@ -247,6 +250,7 @@ class CriterioPontuacao(models.Model):
 
     campo_beneficiario = models.CharField(
         max_length=100,
+        # Campos carregados dinamicamentedo a partir do arquivo gestao_municipio/opcoes.py, 
         choices= CampoBeneficiario.choices,
         unique=True
     )

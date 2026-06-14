@@ -1,4 +1,4 @@
-from ..models import CriterioPontuacao
+from gestao_municipio.models import CriterioPontuacao
 
 
 class PontuacaoServico:
@@ -9,7 +9,7 @@ class PontuacaoServico:
     """
 
     @staticmethod
-    def calcular_pontuacao(beneficiario):
+    def calcular(beneficiario):
 
         total = 0
 
