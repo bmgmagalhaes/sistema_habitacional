@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Login Administrativo
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-5">
+
+        <div class="card shadow">
+
+            <div class="card-header bg-primary text-white">
+
+                <h3 class="mb-0">
+                    Acesso Administrativo
+                </h3>
+
+            </div>
+
+            <div class="card-body">
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Usuário
+                        </label>
+
+                        {{ form.username }}
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Senha
+                        </label>
+
+                        {{ form.password }}
+
+                    </div>
+
+                    <div class="d-grid">
+
+                        <button type="submit"
+                                class="btn btn-primary">
+
+                            Entrar
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

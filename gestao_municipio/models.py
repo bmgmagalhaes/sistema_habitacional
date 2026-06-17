@@ -258,17 +258,21 @@ class Beneficiario(models.Model):
 class CriterioPontuacao(models.Model):
 
     descricao = models.CharField(
-        max_length=255)
+        max_length=255,
+        verbose_name='Descrição')
 
     campo_beneficiario = models.CharField(
         max_length=100,
         # Campos carregados dinamicamentedo a partir do arquivo gestao_municipio/opcoes.py, 
         choices= CampoBeneficiario.choices,
-        unique=True
+        unique=True,
+        verbose_name='Identificação do critério'
     )
 
     pontos = models.PositiveIntegerField(
-        help_text='Quantidade de pontos atribuída ao critério')
+        help_text='Quantidade de pontos atribuída ao critério',
+        verbose_name='Valor da pontuação'
+        )
 
 
     TIPO_CALCULO_CHOICES = [
@@ -278,18 +282,22 @@ class CriterioPontuacao(models.Model):
     tipo_calculo = models.CharField(
         max_length=20,
         choices=TIPO_CALCULO_CHOICES,
-        default='fixo')
+        default='fixo',
+        verbose_name='Forma de cálculo')
 
     fundamentacao_legal = models.CharField(
         max_length=255,
-        blank=True)
+        blank=True,
+        verbose_name='Fundamentação legal')
 
     ativo = models.BooleanField(
-        default=True
+        default=True,
+        verbose_name='Ativo'
     )
 
     data_cadastro = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True,
+        verbose_name='Data do cadastro'
     )
 
     history = HistoricalRecords()

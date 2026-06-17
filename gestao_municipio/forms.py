@@ -1,5 +1,5 @@
 from django import forms
-from .models import Beneficiario
+from .models import Beneficiario, CriterioPontuacao
 
 class BeneficiarioForm(forms.ModelForm):
         
@@ -17,6 +17,37 @@ class BeneficiarioForm(forms.ModelForm):
             'situacao_cadastral',
             'data_cadastro',
             'data_ultima_alteracao',
+        )
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        for nome, field in self.fields.items():
+
+            if isinstance(field, forms.BooleanField):
+
+                field.widget.attrs.update({
+                    'class': 'form-check-input'
+                })
+
+            else:
+
+                field.widget.attrs.update({
+                    'class': 'form-control'
+                })
+
+
+
+class CriterioPontuacaoForm(forms.ModelForm):
+        
+    class Meta:
+
+        model = CriterioPontuacao
+        
+        fields = '__all__'
+        exclude = (
+            'data_cadastro',
+            'history',
         )
     def __init__(self, *args, **kwargs):
 

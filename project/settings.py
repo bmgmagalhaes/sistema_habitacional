@@ -103,6 +103,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGIN_URL = 'login'
+
+LOGIN_REDIRECT_URL = 'gestao_municipio:dashboard_admin'
+
+LOGOUT_REDIRECT_URL = 'gestao_municipio:index_prefeitura'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/

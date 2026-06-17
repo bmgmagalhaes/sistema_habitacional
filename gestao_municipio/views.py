@@ -1,15 +1,16 @@
 # from django.http import HttpResponseRedirect
 # from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
-from gestao_municipio.models import Beneficiario
-from gestao_municipio.forms import BeneficiarioForm
+from gestao_municipio.models import Beneficiario, CriterioPontuacao
+from gestao_municipio.forms import BeneficiarioForm, CriterioPontuacaoForm
 from gestao_municipio.servicos.pontuacao import PontuacaoServico
 from django.shortcuts import redirect, render
 from django.contrib import messages
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-# Create your views here.
+# Create your views here.       
 
 class BeneficiarioCreateView(CreateView):
     model = Beneficiario
@@ -113,12 +114,7 @@ class BeneficiarioUpdateView(UpdateView):
                 pk=beneficiario.pk
             )
 
-# class BeneficiarioDeleteView(DeleteView):
-#     model = Beneficiario
-#     template_name = 'gestao_municipio/portal_prefeitura/beneficiario_confirm_delete.html'
-#     success_url = reverse_lazy('beneficiario_lista')
 
-# @login_required
 def index_prefeitura(request):
 
     return render(
@@ -158,3 +154,74 @@ def consultar_cadastro(request):
         request,
         'gestao_municipio/portal_prefeitura/consultar_cadastro.html'
     )
+
+
+@login_required
+def dashboard_admin(request):
+
+    return render(
+        request,
+        'gestao_municipio/administrativo/dashboard.html'
+    )
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# VIEWS DO CRITÉRIO DE PONTUÇAO
+class CriterioPontuacaoCreateView(LoginRequiredMixin, CreateView):
+    model = CriterioPontuacao
+    form_class = CriterioPontuacaoForm
+    
+    # Especifica o template a ser usado para renderizar o formulário de criação do beneficiário.
+    template_name = 'gestao_municipio/administrativo/criterio_pontuacao_form.html'
+    
+    # Método sobrescrito form_valid é chamado pelo Django quando o formulário é válido. 
+    def form_valid(self, form):
+        
+        # Salva o formulário sem enviar para o banco de dados ainda
+        criterio_pontuacao = form.save()  
+        messages.success(
+            self.request,
+            'Cadastro realizado com sucesso.'
+        )
+        messages.MessageFailure(
+            self.request,
+            'Erro ao realizar cadastro.'
+        )
+
+        # Redireciona para a URL de sucesso após salvar o beneficiário
+        return redirect(
+                'gestao_municipio:criterio_pontuacao_lista',
+            )
+
+class CriterioPontuacaoUpdateView(LoginRequiredMixin, UpdateView):
+    model = CriterioPontuacao
+    form_class = CriterioPontuacaoForm
+    template_name = 'gestao_municipio/administrativo/criterio_pontuacao_form.html'
+
+    def form_valid(self, form):
+        
+        criterio_pontuacao = form.save()  
+        
+        messages.success(
+            self.request,
+            'Cadastro alterado com sucesso.'
+        )
+        messages.MessageFailure(
+            self.request,
+            'Erro ao atualizar cadastro.'
+        )
+        
+        # return HttpResponseRedirect(self.get_success_url())  
+        return redirect(
+                'gestao_municipio:criterio_pontuacao_lista',
+                
+            )
+
+class CriterioPontuacaoListView(LoginRequiredMixin, ListView):
+    model = CriterioPontuacao
+
+    # 
+    template_name = ('gestao_municipio/administrativo/criterio_pontuacao_lista.html')
+
+    context_object_name = 'criterios'
+
+    ordering = ['descricao']
