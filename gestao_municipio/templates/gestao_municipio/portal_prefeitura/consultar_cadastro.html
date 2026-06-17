@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Consultar Cadastro
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-6">
+
+        <div class="card shadow">
+
+            <div class="card-header bg-primary text-white">
+
+                <h3 class="mb-0">
+                    Consultar Cadastro
+                </h3>
+
+            </div>
+
+            <div class="card-body">
+
+                <p class="text-muted">
+                    Informe seu CPF e NIS para consultar ou atualizar seu cadastro habitacional.
+                </p>
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+
+                        <label for="cpf" class="form-label fw-bold">
+                            CPF
+                        </label>
+
+                        <input type="text"
+                               name="cpf"
+                               id="cpf"
+                               maxlength="11"
+                               class="form-control"
+                               required>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label for="nis" class="form-label fw-bold">
+                            NIS
+                        </label>
+
+                        <input type="text"
+                               name="nis"
+                               id="nis"
+                               maxlength="11"
+                               class="form-control"
+                               required>
+
+                    </div>
+
+                    <div class="d-grid">
+
+                        <button type="submit"
+                                class="btn btn-primary btn-lg">
+
+                            Consultar Cadastro
+
+                        </button>
+
+                    </div>
+
+                </form>
+                <div class="text-center mt-3">
+
+                    <a href="{% url 'gestao_municipio:index_prefeitura' %}"
+                    class="btn btn-outline-secondary">
+
+                        Voltar
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="card-footer text-muted">
+
+                Caso não possua cadastro, retorne à página inicial e realize sua inscrição.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

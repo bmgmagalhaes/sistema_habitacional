@@ -213,7 +213,7 @@ class Beneficiario(models.Model):
 
     SITUACAO_CADASTRAL_CHOICES = [
         ('em_analise', 'Em análise'),
-        ('contemplado', 'Contemplado'),
+        ('contemplado', 'Contemplado'), 
         ('indeferido', 'Indeferido'),
     ]
     situacao_cadastral = models.CharField(max_length=20, choices=SITUACAO_CADASTRAL_CHOICES, default='em_analise')

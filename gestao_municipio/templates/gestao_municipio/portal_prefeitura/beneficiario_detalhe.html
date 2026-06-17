@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Detalhes do Beneficiário
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-10">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header bg-primary text-white">
+
+                <h3 class="mb-0">
+                    Olá, {{ beneficiario.nome_completo }}!
+                </h3>
+
+            </div>
+
+            <div class="card-body">
+
+                <p class="text-muted">
+                    Lembre-se de que manter seus dados atualizados é fundamental para garantir o acesso aos benefícios habitacionais disponíveis.
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- Dados Pessoais -->
+        <div class="card shadow-sm mb-4">
+
+            <div class="card-header">
+                <h5 class="mb-0">Dados Pessoais</h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <strong>Nome Completo:</strong><br>
+                        {{ beneficiario.nome_completo }}
+                    </div>
+
+                    <div class="col-md-3">
+                        <strong>CPF:</strong><br>
+                        {{ beneficiario.cpf }}
+                    </div>
+
+                    <div class="col-md-3">
+                        <strong>NIS:</strong><br>
+                        {{ beneficiario.nis }}
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <strong>Data de Nascimento:</strong><br>
+                        {{ beneficiario.data_nascimento|date:"d/m/Y" }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <strong>Estado Civil:</strong><br>
+                        {{ beneficiario.get_estado_civil_display }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <strong>Sexo:</strong><br>
+                        {{ beneficiario.get_sexo_display }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Renda -->
+        <div class="card shadow-sm mb-4">
+
+            <div class="card-header">
+                <h5 class="mb-0">Renda</h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <strong>Renda Pessoal:</strong><br>
+                        R$ {{ beneficiario.renda_pessoal }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>Posição Familiar:</strong><br>
+                        {{ beneficiario.get_posicao_familiar_display }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Dados Familiares -->
+        <div class="card shadow-sm mb-4">
+
+            <div class="card-header">
+                <h5 class="mb-0">Dados Familiares</h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row mb-3">
+
+                    <div class="col-md-4">
+                        <strong>Pessoas na Família:</strong><br>
+                        {{ beneficiario.numero_pessoas_familia }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <strong>Renda Familiar:</strong><br>
+                        R$ {{ beneficiario.renda_familiar }}
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <ul class="list-group">
+
+                            <li class="list-group-item">
+                                Recebe Bolsa Família:
+                                <strong>{{ beneficiario.recebe_bolsa_familia|yesno:"Sim,Não" }}</strong>
+                            </li>
+
+                            <li class="list-group-item">
+                                Recebe BPC:
+                                <strong>{{ beneficiario.recebe_bpc|yesno:"Sim,Não" }}</strong>
+                            </li>
+
+                            <li class="list-group-item">
+                                Deficiência na Família:
+                                <strong>{{ beneficiario.deficiencia_na_familia|yesno:"Sim,Não" }}</strong>
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <ul class="list-group">
+
+                            <li class="list-group-item">
+                                Doença Rara:
+                                <strong>{{ beneficiario.doenca_rara_na_familia|yesno:"Sim,Não" }}</strong>
+                            </li>
+
+                            <li class="list-group-item">
+                                Idosos na Família:
+                                <strong>{{ beneficiario.idosos_na_familia|yesno:"Sim,Não" }}</strong>
+                            </li>
+
+                            <li class="list-group-item">
+                                Situação de Rua:
+                                <strong>{{ beneficiario.situacao_rua|yesno:"Sim,Não" }}</strong>
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Situação -->
+        <div class="card shadow-sm mb-4">
+
+            <div class="card-header">
+                <h5 class="mb-0">Situação do Cadastro</h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <strong>Pontuação:</strong><br>
+                        {{ beneficiario.pontuacao }}
+                    </div>
+
+                    <div class="col-md-3">
+                        <strong>Situação:</strong><br>
+                        {{ beneficiario.get_situacao_cadastral_display }}
+                    </div>
+
+                    <div class="col-md-3">
+                        <strong>Ativo:</strong><br>
+                        {{ beneficiario.ativo|yesno:"Sim,Não" }}
+                    </div>
+
+                    
+
+                </div>
+                <hr>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <strong>Data Cadastro:</strong><br>
+                        {{ beneficiario.data_cadastro|date:"d/m/Y H:i" }}
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Última Alteração:</strong><br>
+                        {{ beneficiario.data_ultima_alteracao|date:"d/m/Y H:i" }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="text-center">
+
+            <a href="{% url 'gestao_municipio:beneficiario_editar' beneficiario.pk %}"
+            
+               class="btn btn-warning btn-lg">
+
+                Editar Cadastro
+
+            </a>
+
+        </div>
+
+        <div class="text-center mt-3">
+
+            <a href="{% url 'gestao_municipio:index_prefeitura' %}"
+            class="btn btn-outline-secondary">
+
+                Voltar
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
