@@ -9,9 +9,9 @@ class PontuacaoServico:
     """
 
     @staticmethod
-    def calcular(beneficiario):
+    def calcular(beneficiario) -> int:
 
-        total = 0
+        pontuacao_total = 0
 
         # Recupera os critérios de pontuação ativos
         criterios = CriterioPontuacao.objects.filter(ativo=True)
@@ -27,16 +27,22 @@ class PontuacaoServico:
 
                 # Para critérios de cálculo fixo, a pontuação é adicionada ao total se o valor do campo for verdadeiro (para campos booleanos) ou maior que zero (para campos numéricos)
                 if valor:
-                    total += criterio.pontos
+                    pontuacao_total += criterio.pontos
             # Para critérios de cálculo multiplicador, a pontuação é calculada multiplicando o valor do campo pelo número de pontos definido no critério e somando ao total
             elif criterio.tipo_calculo == "multiplicador":
 
-                total += (valor or 0) * criterio.pontos
+                pontuacao_total += (valor or 0) * criterio.pontos
 
-        return total
+        return pontuacao_total
 
     @staticmethod
-    def reprocessar():
+    def reprocessar() -> int:
+        """
+        Recalcula a pontuação de todos os beneficiários ativos.
+
+        Returns:
+            int: quantidade de beneficiários reprocessados.
+        """
 
         # TODO
         # No futuro, recalcular apenas beneficiários que

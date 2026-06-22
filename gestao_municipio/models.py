@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.core.validators import RegexValidator
 from django.db import models
 from simple_history.models import HistoricalRecords
@@ -257,10 +259,26 @@ class Beneficiario(models.Model):
 
     pontuacao = models.PositiveIntegerField(default=0, editable=False)
 
+    @property
+    def idade(self):
+
+        hoje = date.today()
+
+        idade = hoje.year - self.data_nascimento.year
+
+        if (hoje.month, hoje.day) < (
+            self.data_nascimento.month,
+            self.data_nascimento.day,
+        ):
+
+            idade -= 1
+
+        return idade
+
     def __str__(self):
         return f"{self.nome_completo} - CPF: {self.cpf} - NIS: {self.nis}"
 
-    def calcular_pontuacao(self):
+    def recalcular_pontuacao(self):
         """
         Recalcula a pontuação do beneficiário com base nos critérios de pontuação ativos.
         Usado para o caso de alterações cadastrais ou mudanças nos critérios de pontuação, garantindo que a pontuação do beneficiário esteja sempre atualizada e refletindo corretamente os critérios definidos.
