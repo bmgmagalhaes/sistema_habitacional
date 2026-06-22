@@ -412,3 +412,16 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         )
 
         return context
+    
+class ReprocessarPontuacaoView(LoginRequiredMixin, View):
+
+    def post(self, request):
+
+        total = PontuacaoServico.reprocessar()
+
+        messages.success(
+            request,
+            f'Pontuação recalculada com sucesso para {total} beneficiários.'
+        )
+
+        return redirect('gestao_municipio:dashboard')

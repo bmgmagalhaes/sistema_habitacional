@@ -150,11 +150,23 @@ Painel de Gestão
                         Recalcular a pontuação de todos os beneficiários.
                     </p>
 
-                    <button class="btn btn-warning" disabled>
+                    <form method="post"
+                        action="{% url 'gestao_municipio:reprocessar_pontuacao' %}">
 
-                        Em desenvolvimento
+                        {% csrf_token %}
 
-                    </button>
+                        <button
+                            type="submit"
+                            class="btn btn-warning"
+                            onclick="return confirm(
+                                'Deseja realmente recalcular a pontuação de todos os beneficiários?'
+                            );">
+
+                            Reprocessar Pontuações
+
+                        </button>
+
+                    </form>
 
                 </div>
 

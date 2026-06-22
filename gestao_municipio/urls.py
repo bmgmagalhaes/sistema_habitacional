@@ -29,4 +29,5 @@ urlpatterns = [
     path('administrativo/beneficiarios/',views.BeneficiarioListView.as_view(),name='beneficiario_lista'),
     path('administrativo/beneficiario/<int:pk>/editar/', views.BeneficiarioAdminUpdateView.as_view(), name='beneficiario_admin_editar'),
     path('administrativo/beneficiarios/exportar/',views.ExportarBeneficiariosCSVView.as_view(),name='beneficiario_exportar_csv'),
+    path('administrativo/reprocessar-pontuacao/',views.ReprocessarPontuacaoView.as_view(),name='reprocessar_pontuacao'),
 ]
