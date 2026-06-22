@@ -1,9 +1,169 @@
 {% extends 'base.html' %}
 
+{% block title %}
+Painel de Gestão
+{% endblock %}
+
 {% block content %}
 
-<h1>Painel Administrativo</h1>
+<div class="container mt-4">
 
-<p>Área restrita para gestores.</p>
+    <div class="mb-4">
+        <h2>Painel de Gestão</h2>
+        <p class="text-muted">
+            Bem-vindo ao Sistema Municipal de Habitação.
+            Utilize as opções abaixo para gerenciar os cadastros e demais funcionalidades do sistema.
+        </p>
+    </div>
+
+    <!-- Indicadores -->
+    <div class="row g-4 mb-5">
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-primary h-100">
+                <div class="card-body text-center">
+                    <h1>👥</h1>
+                    <h3>{{ total_beneficiarios }}</h3>
+                    <p class="mb-0">Beneficiários ativos</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-warning h-100">
+                <div class="card-body text-center">
+                    <h1>🏠</h1>
+                    <h3>{{ total_em_analise }}</h3>
+                    <p class="mb-0">Em análise</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-success h-100">
+                <div class="card-body text-center">
+                    <h1>✅</h1>
+                    <h3>{{ total_contemplados }}</h3>
+                    <p class="mb-0">Contemplados</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-info h-100">
+                <div class="card-body text-center">
+                    <h1>⚙️</h1>
+                    <h3>{{ total_criterios }}</h3>
+                    <p class="mb-0">Critérios ativos</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Funcionalidades -->
+    <div class="row g-4">
+
+        <div class="col-md-6">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h4>👥 Beneficiários</h4>
+
+                    <p class="text-muted">
+                        Consultar, editar e gerenciar os beneficiários cadastrados.
+                    </p>
+
+                    <a href="{% url 'gestao_municipio:beneficiario_lista' %}"
+                       class="btn btn-primary">
+
+                        Acessar
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h4>⚙️ Critérios de Pontuação</h4>
+
+                    <p class="text-muted">
+                        Gerenciar os critérios utilizados para cálculo da pontuação.
+                    </p>
+
+                    <a href="{% url 'gestao_municipio:criterio_pontuacao_lista' %}"
+                       class="btn btn-primary">
+
+                        Acessar
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h4>🏘️ Empreendimentos</h4>
+
+                    <p class="text-muted">
+                        Cadastrar e gerenciar os empreendimentos habitacionais.
+                    </p>
+
+                    <button class="btn btn-warning" disabled>
+
+                        Em desenvolvimento
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h4>🔄 Reprocessar Pontuações</h4>
+
+                    <p class="text-muted">
+                        Recalcular a pontuação de todos os beneficiários.
+                    </p>
+
+                    <button class="btn btn-warning" disabled>
+
+                        Em desenvolvimento
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 {% endblock %}

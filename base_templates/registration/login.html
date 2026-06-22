@@ -1,63 +1,105 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Login Administrativo
+Painel de Gestão
 {% endblock %}
 
 {% block content %}
 
-<div class="row justify-content-center">
+<div class="container mt-5">
 
-    <div class="col-md-5">
+    <div class="row justify-content-center">
 
-        <div class="card shadow">
+        <div class="col-md-5 col-lg-4">
 
-            <div class="card-header bg-primary text-white">
+            <div class="card shadow-lg border-0">
 
-                <h3 class="mb-0">
-                    Acesso Administrativo
-                </h3>
+                <div class="card-body p-4">
 
-            </div>
+                    <div class="text-center mb-4">
 
-            <div class="card-body">
+                        <h2>🏛️</h2>
 
-                <form method="post">
+                        <h3 class="fw-bold">
+                            Painel de Gestão
+                        </h3>
 
-                    {% csrf_token %}
-
-                    <div class="mb-3">
-
-                        <label class="form-label">
-                            Usuário
-                        </label>
-
-                        {{ form.username }}
+                        <p class="text-muted mb-0">
+                            Sistema Municipal de Habitação
+                        </p>
 
                     </div>
 
-                    <div class="mb-3">
+                    {% if form.errors %}
 
-                        <label class="form-label">
-                            Senha
-                        </label>
+                        <div class="alert alert-danger">
 
-                        {{ form.password }}
+                            Usuário ou senha inválidos.
 
-                    </div>
+                        </div>
 
-                    <div class="d-grid">
+                    {% endif %}
 
-                        <button type="submit"
-                                class="btn btn-primary">
+                    <form method="post">
+
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+
+                                Usuário
+
+                            </label>
+
+                            <input
+                                type="text"
+                                name="username"
+                                class="form-control"
+                                required
+                                autofocus
+                                value="{{ form.username.value|default:'' }}">
+                                
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+
+                                Senha
+
+                            </label>
+
+                            <input
+                                type="password"
+                                name="password"
+                                class="form-control"
+                                required>
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100">
 
                             Entrar
 
                         </button>
 
-                    </div>
+                    </form>
 
-                </form>
+                </div>
+
+            </div>
+
+            <div class="text-center mt-3">
+
+                <small class="text-muted">
+
+                    Acesso restrito aos gestores do Sistema Habitacional.
+
+                </small>
 
             </div>
 

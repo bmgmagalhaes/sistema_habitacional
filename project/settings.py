@@ -105,9 +105,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LOGIN_URL = 'login'
 
-LOGIN_REDIRECT_URL = 'gestao_municipio:dashboard_admin'
+LOGIN_REDIRECT_URL = 'gestao_municipio:dashboard'
 
-LOGOUT_REDIRECT_URL = 'gestao_municipio:index_prefeitura'
+LOGOUT_REDIRECT_URL = 'login'
 
 
 # Internationalization

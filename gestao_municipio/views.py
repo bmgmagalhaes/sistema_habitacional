@@ -10,8 +10,9 @@ from gestao_municipio.servicos.pontuacao import PontuacaoServico
 from gestao_municipio.servicos.filtro import BeneficiarioFiltroServico
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
+# from .models import Beneficiario
 
 # Create your views here.       
 
@@ -297,14 +298,6 @@ def consultar_cadastro(request):
     )
 
 
-@login_required
-def dashboard_admin(request):
-
-    return render(
-        request,
-        'gestao_municipio/administrativo/dashboard.html'
-    )
-
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # VIEWS DO CRITÉRIO DE PONTUÇAO
 class CriterioPontuacaoCreateView(LoginRequiredMixin, CreateView):
@@ -369,3 +362,53 @@ class CriterioPontuacaoListView(LoginRequiredMixin, ListView):
 
     ordering = ['descricao']
 
+class DashboardView(LoginRequiredMixin, TemplateView):
+
+    template_name = 'gestao_municipio/administrativo/dashboard.html'
+
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+
+        context['total_beneficiarios'] = (
+            Beneficiario.objects.filter(
+                ativo=True
+            ).count()
+        )
+
+
+
+        # SITUACAO_CADASTRAL_CHOICES = [
+        #     ('em_analise', 'Em análise'),
+        #     ('contemplado', 'Contemplado'), 
+        #     ('indeferido', 'Indeferido'),
+        # ]
+        # situacao = Beneficiario.SITUACAO_CADASTRAL_CHOICES
+        context['total_em_analise'] = (
+            Beneficiario.objects.filter(
+                ativo=True,
+                situacao_cadastral='em_analise'
+            ).count()
+        )
+
+        context['total_contemplados'] = (
+            Beneficiario.objects.filter(
+                ativo=True,
+                situacao_cadastral='contemplado'
+            ).count()
+        )
+
+        context['total_indeferido'] = (
+            Beneficiario.objects.filter(
+                ativo=True,
+                situacao_cadastral='indeferido'
+            ).count()
+        )
+
+        context['total_criterios'] = (
+            CriterioPontuacao.objects.filter(
+                ativo=True
+            ).count()
+        )
+
+        return context
