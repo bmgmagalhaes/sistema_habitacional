@@ -37,6 +37,38 @@ class BeneficiarioForm(forms.ModelForm):
                 })
 
 
+class BeneficiarioAdminForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Beneficiario
+
+        exclude = (
+            'pontuacao',
+            'data_cadastro',
+            'data_ultima_alteracao',
+            'history',
+        )
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        for nome, field in self.fields.items():
+
+            if isinstance(field, forms.BooleanField):
+
+                field.widget.attrs.update({
+                    'class': 'form-check-input'
+                })
+
+            else:
+
+                field.widget.attrs.update({
+                    'class': 'form-control'
+                })
+
+
 
 class CriterioPontuacaoForm(forms.ModelForm):
         

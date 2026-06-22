@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Beneficiários
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="mb-0">Beneficiários</h2>
+            <small class="text-muted">
+                Listagem administrativa dos beneficiários cadastrados.
+            </small>
+        </div>
+
+        <div>
+
+            <a href="#"
+               class="btn btn-outline-success">
+
+                Exportar CSV
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Filtros (implementaremos depois) -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+            Filtros
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Pesquisar por:
+                    </label>
+
+                    {% comment %} <input type="text"
+                           class="form-control"
+                           placeholder="Nome, CPF ou NIS"> {% endcomment %}
+
+
+                    <form method="get" class="row g-3">
+
+                    <div class="col-md-8">
+
+                        <input
+                            type="text"
+                            name="pesquisa"
+                            class="form-control"
+                            placeholder="Nome, CPF ou NIS"
+                            value="{{ pesquisa }}"
+                        >
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary">
+
+                            Pesquisar
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+                    {% comment %}  {% endcomment %}
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <label class="form-label">
+                        Situação
+                    </label>
+
+                    <select class="form-select">
+
+                        <option>Todas</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <label class="form-label">
+                        Itens por página
+                    </label>
+
+                    <select class="form-select">
+
+                        <option>30</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow">
+
+        <div class="card-body">
+
+            {% if beneficiarios %}
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead class="table-light">
+
+                        <tr>
+
+                            <th class="text-end">Classificação</th>
+
+                            <th>Nome</th>
+
+                            <th>CPF</th>
+
+                            <th>Pontuação</th>
+
+                            <th>Situação</th>
+
+                            <th>Cadastro</th>
+
+                            <th></th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        {% for beneficiario in beneficiarios %}
+
+                            <tr>
+
+                                <td class="text-end">
+
+                                    {{ primeira_classificacao|add:forloop.counter0 }}
+
+                                </td>
+
+                                <td>
+                                    
+                                    <a href="{% url 'gestao_municipio:beneficiario_detalhe' beneficiario.pk %}?next=beneficiario_lista">
+
+                                        {{ beneficiario.nome_completo }}
+
+                                    </a>
+
+                                </td>
+
+                                <td>
+
+                                    {{ beneficiario.cpf }}
+
+                                </td>
+
+                                <td>
+
+                                    <span class="badge bg-primary fs-6">
+
+                                        {{ beneficiario.pontuacao }}
+
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    {{ beneficiario.get_situacao_cadastral_display }}
+
+                                </td>
+
+                                <td>
+
+                                    {{ beneficiario.data_cadastro|date:"d/m/Y" }}
+
+                                </td>
+
+                                <td>
+                                    <a href="{% url 'gestao_municipio:beneficiario_detalhe' beneficiario.pk %}?next=beneficiario_lista"
+                                    
+                                       class="btn btn-sm btn-outline-primary">
+
+                                        Ver
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="alert alert-info">
+
+                    Nenhum beneficiário encontrado.
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <div class="mt-4">
+
+        <!-- Paginação será implementada posteriormente -->
+        {% comment %} {% include "pagination.html" %} {% endcomment %}
+
+    </div>
+
+</div>
+
+{% endblock %}

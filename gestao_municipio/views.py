@@ -1,8 +1,7 @@
-# from django.http import HttpResponseRedirect
-# from django.urls import reverse_lazy
+from django.urls import reverse
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from gestao_municipio.models import Beneficiario, CriterioPontuacao
-from gestao_municipio.forms import BeneficiarioForm, CriterioPontuacaoForm
+from gestao_municipio.forms import BeneficiarioAdminForm, BeneficiarioForm, CriterioPontuacaoForm
 from gestao_municipio.servicos.pontuacao import PontuacaoServico
 from django.shortcuts import redirect, render
 from django.contrib import messages
@@ -52,67 +51,130 @@ class BeneficiarioCreateView(CreateView):
                 pk=beneficiario.pk
             )
     
-
-
-
-
-# class BeneficiarioListView(ListView):
-#     model = Beneficiario
-#     paginate_by = 30
-#     template_name = 'gestao_municipio/portal_prefeitura/beneficiario_lista.html'
-
-#     # Define o nome do contexto para a lista de beneficiários, permitindo que seja acessada no template usando esse nome.
-#     context_object_name = 'beneficiarios'
-
-#     def get_queryset(self):
         
-#         # Retorna um queryset de beneficiários ativos, ordenados por pontuação (do maior para o menor)
-#         # Em caso de empate na pontuação, ordenados por nome completo em ordem alfabética.
 
-#         queryset = (
-#             Beneficiario.objects
-#             .filter(ativo=True
-#             # .order_by('-pontuacao', 
-#             #           'nome_completo')
-#             )
-#         )
-        
-#         return queryset
+class BeneficiarioListView(LoginRequiredMixin,ListView):
+
+    model = Beneficiario
+
+    paginate_by = 30
+
+    template_name = (
+        'gestao_municipio/administrativo/beneficiario_lista.html'
+    )
+
+    context_object_name = 'beneficiarios'
+
+    def get_queryset(self):
+
+        return (
+            Beneficiario.objects
+            .filter(ativo=True)
+            .order_by(
+                '-pontuacao',
+                'nome_completo'
+            )
+        )
+    
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+
+        context['primeira_classificacao'] = (
+            (context['page_obj'].number - 1)
+            * self.paginate_by
+        ) + 1
+
+        return context
+    
 
 class BeneficiarioDetailView(DetailView):
     model = Beneficiario
     template_name = 'gestao_municipio/portal_prefeitura/beneficiario_detalhe.html'
     context_object_name = 'beneficiario'
 
-class BeneficiarioUpdateView(UpdateView):
-    model = Beneficiario
-    form_class = BeneficiarioForm
-    template_name = 'gestao_municipio/portal_prefeitura/beneficiario_form.html'
-    # success_url = reverse_lazy('gestao_municipio:index_prefeitura')
+    def get_context_data(self, **kwargs):
+        
+        context = super().get_context_data(**kwargs)
 
+        # Pega o valor do dicionário chave next. Se não houver, usa index_prefeitura
+        context['next'] = self.request.GET.get('next', 'index_prefeitura')
+
+        return context
+
+class BeneficiarioUpdateView(UpdateView):
+    
+    model = Beneficiario
+    template_name = 'gestao_municipio/portal_prefeitura/beneficiario_form.html'
+    
+    def get_form_class(self):
+
+        next_url = self.request.GET.get('next')
+
+        if next_url == 'beneficiario_lista':
+            return BeneficiarioAdminForm
+
+        return BeneficiarioForm
+    
+    
     def form_valid(self, form):
         
         beneficiario = form.save(commit=False)  
         beneficiario.pontuacao = PontuacaoServico.calcular(beneficiario)  
         
-        beneficiario.save()  
         self.object = beneficiario
+        self.object.save()
 
 
         messages.success(
             self.request,
             'Cadastro alterado com sucesso.'
         )
-        messages.MessageFailure(
-            self.request,
-            'Erro ao atualizar cadastro.'
-        )
+          
+        # Se não existir o parâmetro 'next', retorna index_prefeitura
+        next_url = self.request.GET.get('next', 'index_prefeitura')
+
+        url = reverse('gestao_municipio:beneficiario_detalhe',kwargs={'pk': self.object.pk})
+
+        return redirect(f"{url}?next={next_url}")
+    
+
+
+class BeneficiarioAdminUpdateView(LoginRequiredMixin, UpdateView):
+    
+    model = Beneficiario
+    template_name = 'gestao_municipio/administrativo/beneficiario_admin_form.html'
+    
+    def get_form_class(self):
+
+        next_url = self.request.GET.get('next')
+
+        if next_url == 'beneficiario_lista':
+            return BeneficiarioAdminForm
+
+        return BeneficiarioForm
+    
+    
+    def form_valid(self, form):
         
-        # return HttpResponseRedirect(self.get_success_url())  
-        return redirect(
-                'gestao_municipio:beneficiario_detalhe',
-                pk=beneficiario.pk
-            )
+        beneficiario = form.save(commit=False)  
+        beneficiario.pontuacao = PontuacaoServico.calcular(beneficiario)  
+        
+        self.object = beneficiario
+        self.object.save()
+
+
+        messages.success(
+            self.request,
+            'Cadastro alterado com sucesso.'
+        )
+          
+        # Se não existir o parâmetro 'next', retorna index_prefeitura
+        next_url = self.request.GET.get('next', 'index_prefeitura')
+
+        url = reverse('gestao_municipio:beneficiario_detalhe',kwargs={'pk': self.object.pk})
+
+        return redirect(f"{url}?next={next_url}")
 
 
 def index_prefeitura(request):

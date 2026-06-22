@@ -238,26 +238,62 @@ Detalhes do Beneficiário
 
         <div class="text-center">
 
-            <a href="{% url 'gestao_municipio:beneficiario_editar' beneficiario.pk %}"
+            {% if next == 'beneficiario_lista' %}
+
+                <a href="{% url 'gestao_municipio:beneficiario_lista' %}?next=beneficiario_lista"  class="btn btn-outline-secondary">
+                    Retornar para lista
+                </a>
+
+                <a href="{% url 'gestao_municipio:beneficiario_admin_editar' beneficiario.pk %}?next=beneficiario_lista" class="btn btn-warning btn-lg">
+                
+                    Editar cadastro
+                </a>
+
+            {% else %}
+
+                <a href="{% url 'gestao_municipio:index_prefeitura' %}" class="btn btn-outline-secondary">
+                    Voltar ao Portal
+                </a>    
+
+                <a href="{% url 'gestao_municipio:beneficiario_editar' beneficiario.pk %}?next=index_prefeitura" class="btn btn-warning btn-lg">
+                
+                    Editar Cadastro
+                </a>
+                
+            {% endif %}
             
-               class="btn btn-warning btn-lg">
+            
+
+            {% comment %} <a href="{% url 'gestao_municipio:beneficiario_editar' beneficiario.pk %}" class="btn btn-warning btn-lg">
 
                 Editar Cadastro
-
-            </a>
+            </a> {% endcomment %}
 
         </div>
 
-        <div class="text-center mt-3">
+        {% comment %} <div class="text-center mt-3">
+
+            {% if origem == 'admin' %}
+
+                <a href="{% url 'gestao_municipio:beneficiario_lista' %}" class="btn btn-outline-secondary">
+                    Voltar
+                </a>
+
+            {% else %}
+
+                <a href="{% url 'gestao_municipio:index_prefeitura' %}" class="btn btn-outline-secondary">
+                    Voltar
+                </a>
+
+            {% endif %}
 
             <a href="{% url 'gestao_municipio:index_prefeitura' %}"
             class="btn btn-outline-secondary">
 
                 Voltar
-
             </a>
 
-        </div>
+        </div> {% endcomment %}
 
     </div>
 

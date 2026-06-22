@@ -22,24 +22,11 @@ urlpatterns = [
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
     # AREA RESTRITA - Somente para usuários autenticados (funcionários da prefeitura)
-    path('administrativo/',
-         views.dashboard_admin,
-         name='dashboard_admin'),
-
-    path('administrativo/criterios-pontuacao/',
-         views.CriterioPontuacaoListView.as_view(),
-         name='criterio_pontuacao_lista'),
-    
-    path(
-        'administrativo/criterios-pontuacao/novo/',
-        views.CriterioPontuacaoCreateView.as_view(),
-        name='criterio_pontuacao_novo'
-    ),
-
-    path(
-        'administrativo/criterios-pontuacao/<int:pk>/editar/',
-        views.CriterioPontuacaoUpdateView.as_view(),
-        name='criterio_pontuacao_editar'
-    ),
+    path('administrativo/',views.dashboard_admin,name='dashboard_admin'),
+    path('administrativo/criterios-pontuacao/',views.CriterioPontuacaoListView.as_view(),name='criterio_pontuacao_lista'),
+    path('administrativo/criterios-pontuacao/novo/',views.CriterioPontuacaoCreateView.as_view(),name='criterio_pontuacao_novo'),
+    path('administrativo/criterios-pontuacao/<int:pk>/editar/',views.CriterioPontuacaoUpdateView.as_view(),name='criterio_pontuacao_editar'),
+    path('administrativo/beneficiarios/',views.BeneficiarioListView.as_view(),name='beneficiario_lista'),
+    path('administrativo/beneficiario/<int:pk>/editar/', views.BeneficiarioAdminUpdateView.as_view(), name='beneficiario_admin_editar'),
    
 ]
