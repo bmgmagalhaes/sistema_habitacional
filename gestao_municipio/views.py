@@ -1,13 +1,17 @@
+import csv
+from datetime import datetime
+from django.http import HttpResponse
 from django.urls import reverse
+from django.views import View
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from gestao_municipio.models import Beneficiario, CriterioPontuacao
 from gestao_municipio.forms import BeneficiarioAdminForm, BeneficiarioForm, CriterioPontuacaoForm
 from gestao_municipio.servicos.pontuacao import PontuacaoServico
+from gestao_municipio.servicos.filtro import BeneficiarioFiltroServico
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-
 
 # Create your views here.       
 
@@ -67,26 +71,28 @@ class BeneficiarioListView(LoginRequiredMixin,ListView):
 
     def get_queryset(self):
 
-        return (
+        queryset = (
             Beneficiario.objects
             .filter(ativo=True)
-            .order_by(
-                '-pontuacao',
-                'nome_completo'
-            )
         )
+        
+        return BeneficiarioFiltroServico.aplicar(queryset, self.request)
     
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
 
+        context['pesquisa'] = self.request.GET.get(
+            'pesquisa',
+            ''
+        )
         context['primeira_classificacao'] = (
             (context['page_obj'].number - 1)
             * self.paginate_by
         ) + 1
 
         return context
-    
+     
 
 class BeneficiarioDetailView(DetailView):
     model = Beneficiario
@@ -138,6 +144,79 @@ class BeneficiarioUpdateView(UpdateView):
 
         return redirect(f"{url}?next={next_url}")
     
+
+class ExportarBeneficiariosCSVView(LoginRequiredMixin, View):
+
+    def get(self, request):
+
+        # Obtém todos os beneficiários ativos,
+        # ordenados pela pontuação.
+        # beneficiarios = (
+        #     Beneficiario.objects
+        #     .filter(ativo=True)
+        #     .order_by(
+        #         '-pontuacao',
+        #         'nome_completo'
+        #     )
+        # )
+        beneficiarios = BeneficiarioFiltroServico.aplicar(
+            Beneficiario.objects.filter(ativo=True),
+            request
+        )
+        quantidade = request.GET.get('quantidade')
+
+        if quantidade:
+            try:
+                quantidade = int(quantidade)
+                if quantidade > 0:
+                    beneficiarios = beneficiarios[:quantidade]
+
+            except ValueError:
+                pass
+        # Nome do arquivo
+        data = datetime.now().strftime('%d_%m_%Y')
+
+        response = HttpResponse(
+            content_type='text/csv; charset=utf-8'
+        )
+
+        response['Content-Disposition'] = (
+            f'attachment; filename="beneficiarios_{data}.csv"'
+        )
+
+        # Escreve o BOM para que o Excel reconheça UTF-8
+        response.write('\ufeff')
+
+        writer = csv.writer(
+            response,
+            delimiter=';'
+        )
+
+        # Cabeçalho
+        writer.writerow([
+            'Classificação',
+            'Nome',
+            'CPF',
+            'Pontuação',
+            'Data do cadastro',
+        ])
+
+        classificacao = 1
+
+        for beneficiario in beneficiarios:
+
+            writer.writerow([
+                classificacao,
+                beneficiario.nome_completo,
+                beneficiario.cpf,
+                beneficiario.pontuacao,
+                beneficiario.data_cadastro.strftime('%d/%m/%Y')
+            ])
+    
+
+            classificacao += 1
+
+        return response
 
 
 class BeneficiarioAdminUpdateView(LoginRequiredMixin, UpdateView):
@@ -279,6 +358,8 @@ class CriterioPontuacaoUpdateView(LoginRequiredMixin, UpdateView):
             )
 
 class CriterioPontuacaoListView(LoginRequiredMixin, ListView):
+
+
     model = CriterioPontuacao
 
     # 
@@ -287,3 +368,4 @@ class CriterioPontuacaoListView(LoginRequiredMixin, ListView):
     context_object_name = 'criterios'
 
     ordering = ['descricao']
+

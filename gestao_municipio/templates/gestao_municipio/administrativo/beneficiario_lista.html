@@ -19,12 +19,71 @@ Beneficiários
 
         <div>
 
-            <a href="#"
-               class="btn btn-outline-success">
+            <form method="get"
+                action="{% url 'gestao_municipio:beneficiario_exportar_csv' %}"
+                class="d-flex align-items-end gap-2">
 
+                <!-- Mantém todos os filtros atuais -->
+                {% for chave, valor in request.GET.items %}
+                    <input type="hidden"
+                        name="{{ chave }}"
+                        value="{{ valor }}">
+                {% endfor %}
+                <div class="d-flex align-items-end gap-2">
+
+    <div style="width:120px">
+
+        <label class="form-label">
+            Limite:
+        </label>
+
+        <input
+            type="number"
+            name="quantidade"
+            class="form-control"
+            min="1"
+            placeholder="Todos">
+
+    </div>
+
+    <span class="mb-2 text-muted">
+        beneficiários
+    </span>
+
+    <button class="btn btn-success">
+
+        Exportar CSV
+
+    </button>
+
+</div>
+                {% comment %} <div>
+
+                    <label class="form-label">
+                        Limite de beneficiários
+                    </label>
+
+                    <input type="number"
+                        name="quantidade"
+                        class="form-control"
+                        min="1"
+                        placeholder="Todos da lista">
+
+
+                </div>
+
+                <button class="btn btn-success">
+
+                    Exportar CSV
+
+                </button> {% endcomment %}
+
+            </form>
+
+            {% comment %} <a href="{% url 'gestao_municipio:beneficiario_exportar_csv' %}?{{ request.GET.urlencode }}"
+            class="btn btn-outline-success">
                 Exportar CSV
-
-            </a>
+            </a> {% endcomment %}
 
         </div>
 
@@ -48,41 +107,34 @@ Beneficiários
                         Pesquisar por:
                     </label>
 
-                    {% comment %} <input type="text"
-                           class="form-control"
-                           placeholder="Nome, CPF ou NIS"> {% endcomment %}
 
 
                     <form method="get" class="row g-3">
 
-                    <div class="col-md-8">
+                        <div class="col-md-8">
 
-                        <input
-                            type="text"
-                            name="pesquisa"
-                            class="form-control"
-                            placeholder="Nome, CPF ou NIS"
-                            value="{{ pesquisa }}"
-                        >
+                            <input
+                                type="text"
+                                name="pesquisa"
+                                class="form-control"
+                                placeholder="Nome, CPF ou NIS"
+                                value="{{ pesquisa }}">
 
-                    </div>
+                        </div>
 
-                    <div class="col-md-4">
+                        <div class="col-md-4">
 
-                        <button
-                            type="submit"
-                            class="btn btn-primary">
+                            <button
+                                type="submit"
+                                class="btn btn-primary">
 
-                            Pesquisar
+                                Pesquisar
 
-                        </button>
+                            </button>
 
-                    </div>
+                         </div>
 
-                </form>
-
-
-                    {% comment %}  {% endcomment %}
+                    </form>
 
                 </div>
 
