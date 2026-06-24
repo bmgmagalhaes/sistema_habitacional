@@ -54,7 +54,7 @@ class BeneficiarioCreateView(CreateView):
         self.object = beneficiario
 
         messages.success(self.request, "Cadastro realizado com sucesso.")
-        messages.MessageFailure(self.request, "Erro ao realizar cadastro.")
+        # messages.MessageFailure(self.request, "Erro ao realizar cadastro.")
         # Redireciona para a URL de sucesso após salvar o beneficiário
         # return HttpResponseRedirect(self.get_success_url())
         return redirect("gestao_municipio:beneficiario_detalhe", pk=beneficiario.pk)
